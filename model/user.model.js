@@ -15,10 +15,14 @@ const userSchema = mongoose.Schema({
         type: String,
         required: true,
         default: "User",
-        enum: ["User","Admin"]
-    }
+        enum: ["User", "Admin"]
+    },
+    addresses: {
+        type: [mongoose.Schema.Types.Mixed]
+    },
 }, {
-    versionKey: false
+    versionKey: false,
+    timestamps: true
 })
 
 const UserModel = mongoose.model("user", userSchema);

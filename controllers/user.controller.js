@@ -12,7 +12,7 @@ const { BLModel } = require("../model/blacklist.model")
 //@access        Public
 const userSignUp = async (req, res) => {
     try {
-        const { name, email, password, role } = req.body;
+        const { name, email, password, role, addresses } = req.body;
 
         // Check if user already exists
         const userExists = await UserModel.findOne({ email });
@@ -26,7 +26,7 @@ const userSignUp = async (req, res) => {
 
         // Create a new user
         const hashed_password = bcrypt.hashSync(password, +process.env.SaltRounds);
-        const user = new UserModel({ email, password: hashed_password, name, role });
+        const user = new UserModel({ email, password: hashed_password, name, role, addresses });
         await user.save();
 
         res.status(200).json({ message: 'User created successfully' });
@@ -94,16 +94,37 @@ const userLogin = async (req, res) => {
             expiresIn: '7d'
         });
 
-        res.status(200).json({ message: "Login successfull", token, refreshtoken });
+        return res.status(200).json({ message: "Login successfull", token, refreshtoken });
     } catch (error) {
-        res.status(500).json({ message: "something went wrong", error: error.message });
+        return res.status(500).json({ message: "something went wrong", error: error.message });
+    }
+}
+
+//@description   Add Address
+//@route         POST /user/addresses
+//@access        Public-All
+const addAddress = async (req, res) => {
+    try {
+        const {address}=req.body;
+        const {email,_id}=req.user;
+        if(!address){
+            return res.status(401).json({ message: 'Please Provide a new address to be added' });
+        }
+        await UserModel.findOneAndUpdate(
+            _id,
+            {$push: {addresses: address}}
+        ).then(()=>{
+            return res.status(200).json({ message: "Address Added successfully"});
+        })
+    } catch (error) {
+        return res.status(500).json({ message: "something went wrong", error: error.message });
     }
 }
 
 //@description   Logout
 //@route         GET /user/logout
 //@access        JWT required
-const userLogout = async(req, res) => {
+const userLogout = async (req, res) => {
     const token = req.headers.authorization?.split(' ')[1];
     const black_token = new BLModel({ BL_Token: token })
     await black_token.save()
@@ -129,15 +150,15 @@ const getNewToken = async (req, res) => {
     } catch (error) {
         return res.status(500).json({ message: "something went wrong", error: error.message });
     }
-    
+
 }
 
 //@description   Get profile details
 //@route         GET /user/profile
 //@access        JWT required
 const viewProfile = async (req, res) => {
-    const {_id,name,email,role}=req.user
-    return res.status(200).json({ profile: { _id,name, email, role } })
+    const { _id, name, email, role } = req.user
+    return res.status(200).json({ profile: { _id, name, email, role } })
 }
 
 //@description   Delete User
@@ -161,4 +182,4 @@ const userDelete = async (req, res) => {
 
 
 
-module.exports = { userLogin, userLogout, getNewToken, userSignUp, userDelete, viewProfile, signupAdmin }
+module.exports = { userLogin, userLogout, getNewToken, userSignUp, userDelete, viewProfile, signupAdmin, addAddress }

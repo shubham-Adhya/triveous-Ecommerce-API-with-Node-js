@@ -3,7 +3,8 @@ const cors = require('cors')
 
 const { connection } = require("./configs/db")
 const { userRouter } = require("./routes/user.routes")
-
+const { categoryRouter } = require("./routes/category.routes")
+const { notFound } = require('./middlewares/error.middleware')
 
 require("dotenv").config()
 
@@ -17,8 +18,9 @@ app.get("/", (req,res)=>{
 })
 
 app.use("/user",userRouter)
+app.use("/categories",categoryRouter)
 
-
+app.use(notFound)
 
 app.listen(process.env.port, async()=>{
     try {

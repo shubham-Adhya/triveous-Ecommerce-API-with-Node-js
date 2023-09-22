@@ -11,13 +11,16 @@ const {
     userSignUp,
     userDelete,
     viewProfile,
-    signupAdmin
+    signupAdmin,
+    addAddress
 } = require('../controllers/user.controller')
 
 
 userRouter.post('/signup', userSignUp)
 
 userRouter.post("/login", userLogin)
+
+userRouter.post("/addresses", verifyToken,addAddress)
 
 userRouter.get("/logout", verifyToken, userLogout)
 
