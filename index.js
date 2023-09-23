@@ -2,10 +2,13 @@ const express=require("express")
 const cors = require('cors')
 
 const { connection } = require("./configs/db")
+
 const { userRouter } = require("./routes/user.routes")
 const { categoryRouter } = require("./routes/category.routes")
 const { productRouter } = require("./routes/product.routes")
 const { cartRouter } = require("./routes/cart.routes")
+const { orderRouter } = require("./routes/order.routes")
+
 const { notFound } = require('./middlewares/error.middleware')
 
 require("dotenv").config()
@@ -23,6 +26,7 @@ app.use("/user",userRouter)
 app.use("/categories",categoryRouter)
 app.use("/products",productRouter)
 app.use("/cart", cartRouter)
+app.use("/orders", orderRouter)
 
 app.use(notFound)
 
