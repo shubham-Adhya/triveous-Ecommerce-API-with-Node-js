@@ -5,6 +5,7 @@ const { connection } = require("./configs/db")
 const { userRouter } = require("./routes/user.routes")
 const { categoryRouter } = require("./routes/category.routes")
 const { productRouter } = require("./routes/product.routes")
+const { cartRouter } = require("./routes/cart.routes")
 const { notFound } = require('./middlewares/error.middleware')
 
 require("dotenv").config()
@@ -21,6 +22,7 @@ app.get("/", (req,res)=>{
 app.use("/user",userRouter)
 app.use("/categories",categoryRouter)
 app.use("/products",productRouter)
+app.use("/cart", cartRouter)
 
 app.use(notFound)
 
