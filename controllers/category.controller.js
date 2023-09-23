@@ -1,5 +1,3 @@
-const bcrypt = require("bcrypt")
-const jwt = require("jsonwebtoken")
 require("dotenv").config()
 
 const { CategoryModel } = require("../model/category.model")
@@ -19,7 +17,7 @@ const getAllCategories = async (req, res) => {
     }
 }
 
-//@description   crate new Category
+//@description   create new Category
 //@route         POST /categories/
 //@access        Admin only
 const createCategory = async (req, res) => {
