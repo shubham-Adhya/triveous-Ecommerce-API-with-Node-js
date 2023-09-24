@@ -6,7 +6,7 @@ To start the project locally
 
 1> *Clone this repo* 
 
-            git clone <repo-url>
+            git clone https://github.com/shubham-Adhya/triveous-Ecommerce-API-with-Node-js triveous
             
 2> *Add .env file and add the following fields,*
     Sample:
@@ -19,7 +19,9 @@ To start the project locally
             SaltRounds=3`
 3> Run command
 
-            npm i
+            cd triveous
+            npm install
+            npm run start
             
 **Base URL:** `http://localhost:8080`
 
