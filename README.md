@@ -20,7 +20,8 @@ To start the project locally
 
             JWT_SECRET=triveous_JWT_Secret
             REFRESH_SECRET=triveous_JWT_Refresh_Secret
-            SaltRounds=3`
+            SaltRounds=3
+            
 3> Run command
 
             cd triveous
