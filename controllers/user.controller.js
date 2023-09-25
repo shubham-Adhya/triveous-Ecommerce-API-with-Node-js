@@ -58,10 +58,10 @@ const signupAdmin = async (req, res) => {
         const user = new UserModel({ email, password: hashed_password, name, role });
         await user.save();
 
-        res.status(200).json({ message: 'Admin created successfully' });
+        return res.status(200).json({ message: 'Admin created successfully' });
     } catch (error) {
         console.log(error)
-        res.status(500).send("something went wrong");
+        return res.status(500).json({ message: "something went wrong" });
     }
 }
 
@@ -105,16 +105,16 @@ const userLogin = async (req, res) => {
 //@access        Public-All
 const addAddress = async (req, res) => {
     try {
-        const {address}=req.body;
-        const {email,_id}=req.user;
-        if(!address){
+        const { address } = req.body;
+        const { email, _id } = req.user;
+        if (!address) {
             return res.status(401).json({ message: 'Please Provide a new address to be added' });
         }
         await UserModel.findOneAndUpdate(
             _id,
-            {$push: {addresses: address}}
-        ).then(()=>{
-            return res.status(200).json({ message: "Address Added successfully"});
+            { $push: { addresses: address } }
+        ).then(() => {
+            return res.status(200).json({ message: "Address Added successfully" });
         })
     } catch (error) {
         return res.status(500).json({ message: "something went wrong", error: error.message });
@@ -173,10 +173,10 @@ const userDelete = async (req, res) => {
         }
 
         await UserModel.findOneAndDelete({ email })
-        return res.status(200).send({ message: "User Deleted Successfully" })
+        return res.status(200).json({ message: "User Deleted Successfully" })
     } catch (error) {
         console.log(error)
-        return res.status(500).send("something went wrong");
+        return res.status(500).json({ message: "something went wrong" });
     }
 }
 

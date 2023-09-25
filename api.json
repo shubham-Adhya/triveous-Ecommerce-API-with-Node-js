@@ -228,11 +228,17 @@
       }
     },
     "securitySchemes": {
-      "bearerAuth":{
-        "type":"http",
+      "bearer_token_Auth": {
+        "type": "http",
         "scheme": "bearer",
         "bearerFormat": "JWT",
         "description": "add your JWT token here, it will be prefixed with 'Bearer '"
+      },
+      "bearer_refresh_token_Auth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "add your JWT refresh token here, it will be prefixed with 'Bearer '"
       }
     }
   },
@@ -358,13 +364,13 @@
           }
         },
         "responses": {
-          "200":{
+          "200": {
             "description": "Login successfull",
             "content": {
-              "application/json":{
-                "schema":{
+              "application/json": {
+                "schema": {
                   "type": "object",
-                  "example":{
+                  "example": {
                     "message": "Login successfull",
                     "token": "<JWT Token>",
                     "refreshtoken": "<JWT refresh Token>"
@@ -373,26 +379,26 @@
               }
             }
           },
-          "401":{
+          "401": {
             "description": "Invalid username or password",
             "content": {
-              "application/json":{
-                "schema":{
+              "application/json": {
+                "schema": {
                   "type": "object",
-                  "example":{
+                  "example": {
                     "message": "Invalid username or password"
                   }
                 }
               }
             }
           },
-          "500":{
+          "500": {
             "description": "Internal Server Error",
             "content": {
-              "application/json":{
-                "schema":{
+              "application/json": {
+                "schema": {
                   "type": "object",
-                  "example":{
+                  "example": {
                     "message": "something went wrong"
                   }
                 }
@@ -423,45 +429,366 @@
         },
         "security": [
           {
-            "bearerAuth":[]
+            "bearer_token_Auth": []
           }
         ],
         "responses": {
-          "200":{
+          "200": {
             "description": "Address Added",
             "content": {
-              "application/json":{
-                "schema":{
+              "application/json": {
+                "schema": {
                   "type": "object",
-                  "example":{
+                  "example": {
                     "message": "Address Added successfully"
                   }
                 }
               }
             }
           },
-          "401":{
+          "401": {
             "description": "address not provided",
             "content": {
-              "application/json":{
-                "schema":{
+              "application/json": {
+                "schema": {
                   "type": "object",
-                  "example":{
+                  "example": {
                     "message": "Please Provide a new address to be added"
                   }
                 }
               }
             }
           },
-          "500":{
+          "500": {
             "description": "Internal Server Error",
             "content": {
-              "application/json":{
-                "schema":{
+              "application/json": {
+                "schema": {
                   "type": "object",
-                  "example":{
+                  "example": {
                     "message": "something went wrong",
                     "error": "<error message>"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/logout": {
+      "get": {
+        "summary": "User Logout, token will be blacklisted",
+        "tags": [
+          "User"
+        ],
+        "security": [
+          {
+            "bearer_token_Auth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Logout successfull",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "Logout successfull"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token not provided or token blacklisted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "Unauthorized"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/getnewtoken": {
+      "get": {
+        "summary": "Get new JWT token from the refresh token",
+        "tags": [
+          "User"
+        ],
+        "security": [
+          {
+            "bearer_refresh_token_Auth":[]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get new JWT token with the refresh token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "token": "<JWT Token>"
+                  }
+                }
+              }
+            }
+          },
+          "501": {
+            "description": "Invalid username or password",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "Invalid refresh token, please login again"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "something went wrong",
+                    "error": "<Error message>"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/profile": {
+      "get": {
+        "summary": "Get profile details",
+        "tags": [
+          "User"
+        ],
+        "security": [
+          {
+            "bearer_token_Auth":[]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "profile details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "profile": {
+                      "_id": "<User id>",
+                      "name": "<User Name>",
+                      "email": "<User email>",
+                      "role": "<User role>"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401":{
+            "description": "JWT expired",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message":"Unauthorized",
+                    "error": "Error message"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/adminsignup": {
+      "post": {
+        "summary": "Only admin can signup another admin, provide JWT token of another admin.",
+        "tags": [
+          "User"
+        ],
+        "security": [
+          {
+            "bearer_token_Auth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "example": {
+                  "name": "Robert Lewandowski",
+                  "email": "robertlewandowski@gmail.com",
+                  "password": "robertlewandowski",
+                  "role": "Admin"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "A new Admin signs up",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "Admin created successfully"
+                  }
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "If passed role is other than 'Admin'",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "Specify role as Admin"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "If token error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "Unauthorized",
+                    "error": "<Error message>"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Admin already exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "Admin already exists"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "something went wrong"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/deleteuser": {
+      "delete": {
+        "summary": "Only an admin can Delete User/Admin, provide JWT token of another admin.",
+        "tags": [
+          "User"
+        ],
+        "security": [
+          {
+            "bearer_token_Auth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "example": {
+                  "email": "robertlewandowski@gmail.com"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User Deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "User Deleted Successfully"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "If token error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "Unauthorized",
+                    "error": "<Error message>"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "User not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "User not found"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "something went wrong"
                   }
                 }
               }
