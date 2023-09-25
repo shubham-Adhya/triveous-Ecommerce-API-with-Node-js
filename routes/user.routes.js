@@ -15,12 +15,11 @@ const {
     addAddress
 } = require('../controllers/user.controller')
 
-
 userRouter.post('/signup', userSignUp)
 
 userRouter.post("/login", userLogin)
 
-userRouter.post("/addresses", verifyToken,addAddress)
+userRouter.post("/addresses", verifyToken, addAddress)
 
 userRouter.get("/logout", verifyToken, userLogout)
 
@@ -28,9 +27,9 @@ userRouter.get("/getnewtoken", getNewToken)
 
 userRouter.get("/profile", verifyToken, viewProfile)
 
-userRouter.post("/adminsignup", verifyToken,authorize(["Admin"]), signupAdmin)
+userRouter.post("/adminsignup", verifyToken, authorize(["Admin"]), signupAdmin)
 
-userRouter.delete("/deleteuser", verifyToken,authorize(["Admin"]), userDelete)
+userRouter.delete("/deleteuser", verifyToken, authorize(["Admin"]), userDelete)
 
 
 module.exports = { userRouter }

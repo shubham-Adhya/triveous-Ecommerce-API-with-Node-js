@@ -11,7 +11,7 @@ const {
     updateProduct
 } = require("../controllers/product.controller")
 
-productRouter.get('/', getAllProducts)
+productRouter.get('/', getAllProducts) //rate limit on this
 
 productRouter.get('/:id', getProductById)
 
