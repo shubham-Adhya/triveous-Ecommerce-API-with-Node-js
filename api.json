@@ -525,7 +525,7 @@
         ],
         "security": [
           {
-            "bearer_refresh_token_Auth":[]
+            "bearer_refresh_token_Auth": []
           }
         ],
         "responses": {
@@ -580,7 +580,7 @@
         ],
         "security": [
           {
-            "bearer_token_Auth":[]
+            "bearer_token_Auth": []
           }
         ],
         "responses": {
@@ -602,14 +602,14 @@
               }
             }
           },
-          "401":{
+          "401": {
             "description": "JWT expired",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "example": {
-                    "message":"Unauthorized",
+                    "message": "Unauthorized",
                     "error": "Error message"
                   }
                 }
@@ -789,6 +789,257 @@
                   "type": "object",
                   "example": {
                     "message": "something went wrong"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/products": {
+      "post": {
+        "summary": "Only Admin can create new Product, provide admin JWT token",
+        "tags": [
+          "Product"
+        ],
+        "security": [
+          {
+            "bearer_token_Auth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "example": {
+                  "title": "iPhone 15 Pro Max",
+                  "description": "Introducing the all new iPhone 15 pro max, Again, this time we have only changed the number, nothing new here",
+                  "price": 160000,
+                  "rating": 5,
+                  "stock": 10000,
+                  "brand": "Apple",
+                  "category": "Mobiles",
+                  "deleted": false
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "A New Product Added Successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "New Product Added Successfully",
+                    "product": {
+                      "_id": "<MongoDB ObjectID>",
+                      "title": "iPhone 15 Pro Max",
+                      "description": "Introducing the all new iPhone 15 pro max, Again, this time we have only changed the number, nothing new here",
+                      "price": 160000,
+                      "rating": 5,
+                      "stock": 10000,
+                      "brand": "Apple",
+                      "category": "Mobiles",
+                      "deleted": false
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error creating product or missing required fields",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "Missing required fields"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "If token error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "Unauthorized",
+                    "error": "<Error message>"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "<Error message>"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/products/{id}": {
+      "patch": {
+        "summary": "Only Admin can update Product, provide admin JWT token",
+        "tags": [
+          "Product"
+        ],
+        "security": [
+          {
+            "bearer_token_Auth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The product id (MongoDB ObjectID)",
+            "required": true,
+            "schema":{
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "example": {
+                  "title": "Luxury iPhone 14 Pro ",
+                  "description": "Introducing the all new iPhone 15 pro max, Again, this time we have only changed the number, nothing new here",
+                  "price": 50000,
+                  "rating": 2,
+                  "stock": 500,
+                  "brand": "Apple",
+                  "category": "Mobiles",
+                  "deleted": false
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Product Updated Successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "New Product Added Successfully",
+                    "product": {
+                      "_id":"<MongoDB ObjectID>",
+                      "title": "Luxury iPhone 14 Pro ",
+                      "description": "Introducing the all new iPhone 15 pro max, Again, this time we have only changed the number, nothing new here",
+                      "price": 50000,
+                      "rating": 2,
+                      "stock": 500,
+                      "brand": "Apple",
+                      "category": "Mobiles",
+                      "deleted": false
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error updating product",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "<Error message>"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "If token error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "Unauthorized",
+                    "error": "<Error message>"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "get Product by id",
+        "tags": [
+          "Product"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The product id (MongoDB ObjectID)",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Product details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "product": {
+                      "_id": "<MongoDB ObjectID>",
+                      "title": "Luxury iPhone 14 Pro ",
+                      "description": "Introducing the all new iPhone 15 pro max, Again, this time we have only changed the number, nothing new here",
+                      "price": 50000,
+                      "rating": 2,
+                      "stock": 500,
+                      "brand": "Apple",
+                      "category": "Mobiles",
+                      "deleted": false
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error getting product details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "<Error message>"
                   }
                 }
               }

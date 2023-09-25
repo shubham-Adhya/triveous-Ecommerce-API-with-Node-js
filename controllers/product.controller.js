@@ -52,7 +52,7 @@ const getAllProducts = async (req, res) => {
         res.set('X-Total-Count', totalDocs);
         res.status(200).json(docs);
     } catch (error) {
-        return res.status(400).json({ message: error.message });
+        return res.status(500).json({ message: error.message });
     }
 }
 
@@ -70,7 +70,7 @@ const createProduct = async (req, res) => {
         await product.save();
         return res.status(201).json({ message: "New Product Added Successfully", product });
     } catch (error) {
-        return res.status(400).json({ message: error.message });
+        return res.status(500).json({ message: error.message });
     }
 }
 
