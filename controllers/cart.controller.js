@@ -68,7 +68,7 @@ const updateCart = async (req, res) => {
         });
         const result = await cart.populate('product');
 
-        return res.status(200).json({message:"Cart Updated", result});
+        return res.status(200).json({message:"Cart Updated", cart: result});
     } catch (error) {
         return res.status(400).json({ message: error.message });
     }

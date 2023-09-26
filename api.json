@@ -1303,6 +1303,470 @@
           }
         }
       }
+    },
+    "/cart": {
+      "post": {
+        "summary": "Add Product to Cart, provide user JWT roken",
+        "tags": [
+          "Cart"
+        ],
+        "security": [
+          {
+            "bearer_token_Auth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "example": {
+                  "quantity": 2,
+                  "product": "650e2349fc13ae2f51fd54db"
+                },
+                "description": "provide product id (MongoDB ObjectId)"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Product Added to Cart",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "Product Added to Cart",
+                    "cart": {
+                      "quantity": 2,
+                      "product": {
+                        "_id": "650e2349fc13ae2f51fd54db",
+                        "title": "Phone Case",
+                        "description": "Exceptional craftsmanship and attention to detail",
+                        "price": 171884.69,
+                        "rating": 4,
+                        "stock": 176924,
+                        "brand": "Samsung",
+                        "category": "Mobiles",
+                        "deleted": false
+                      },
+                      "user": "650de2baeaf200fecca01093",
+                      "_id": "6512f5f56c6f89f3bda46004",
+                      "__v": 0
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Server Error or Missing required fields",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": [
+                    {
+                      "message": "<Error message>"
+                    },
+                    {
+                      "message": "Missing required fields"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token not provided or token blacklisted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": [
+                    {
+                      "message": "Unauthorized"
+                    },
+                    {
+                      "message": "Unauthorized",
+                      "error": "<Error message>"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Get cart by user, provide user JWT roken, A user can only view his/her cart ",
+        "tags": [
+          "Cart"
+        ],
+        "security": [
+          {
+            "bearer_token_Auth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cart items",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "example": [
+                    {
+                      "_id": "650e9f33bcc410352b872528",
+                      "quantity": 3,
+                      "product": {
+                        "_id": "650e2349fc13ae2f51fd5477",
+                        "title": "iPad Pro",
+                        "description": "High-quality product with durable materials",
+                        "price": 171342.62,
+                        "rating": 3,
+                        "stock": 334205,
+                        "brand": "Google",
+                        "category": "Mobiles",
+                        "deleted": true
+                      },
+                      "user": "650de2baeaf200fecca01093",
+                      "__v": 0
+                    },
+                    {
+                      "_id": "6512f5f56c6f89f3bda46004",
+                      "quantity": 2,
+                      "product": {
+                        "_id": "650e2349fc13ae2f51fd54db",
+                        "title": "Phone Case",
+                        "description": "Exceptional craftsmanship and attention to detail",
+                        "price": 171884.69,
+                        "rating": 4,
+                        "stock": 176924,
+                        "brand": "Samsung",
+                        "category": "Mobiles",
+                        "deleted": false
+                      },
+                      "user": "650de2baeaf200fecca01093",
+                      "__v": 0
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "<Error message>"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token not provided or token blacklisted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": [
+                    {
+                      "message": "Unauthorized"
+                    },
+                    {
+                      "message": "Unauthorized",
+                      "error": "<Error message>"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cart/{userId}":{
+      "get":{
+        "summary": "Get cart by userId, Only admin can pass userId param, provide Admin JWT token",
+        "tags": [
+          "Cart"
+        ],
+        "security": [
+          {
+            "bearer_token_Auth":[]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "The userId (MongoDB ObjectID)",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cart items",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "example": [
+                    {
+                      "_id": "650e9f33bcc410352b872528",
+                      "quantity": 3,
+                      "product": {
+                        "_id": "650e2349fc13ae2f51fd5477",
+                        "title": "iPad Pro",
+                        "description": "High-quality product with durable materials",
+                        "price": 171342.62,
+                        "rating": 3,
+                        "stock": 334205,
+                        "brand": "Google",
+                        "category": "Mobiles",
+                        "deleted": true
+                      },
+                      "user": "650de2baeaf200fecca01093",
+                      "__v": 0
+                    },
+                    {
+                      "_id": "6512f5f56c6f89f3bda46004",
+                      "quantity": 2,
+                      "product": {
+                        "_id": "650e2349fc13ae2f51fd54db",
+                        "title": "Phone Case",
+                        "description": "Exceptional craftsmanship and attention to detail",
+                        "price": 171884.69,
+                        "rating": 4,
+                        "stock": 176924,
+                        "brand": "Samsung",
+                        "category": "Mobiles",
+                        "deleted": false
+                      },
+                      "user": "650de2baeaf200fecca01093",
+                      "__v": 0
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "<Error message>"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token not provided or token blacklisted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": [
+                    {
+                      "message": "Unauthorized"
+                    },
+                    {
+                      "message": "Unauthorized",
+                      "error": "<Error message>"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cart/{cartId}":{
+      "patch":{
+        "summary": "Update cart",
+        "tags": [
+          "Cart"
+        ],
+        "security": [
+          {
+            "bearer_token_Auth":[]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "cartId",
+            "in": "path",
+            "description": "The cartId (MongoDB ObjectID)",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody":{
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "example": {
+                    "quantity": 5,
+                    "product": "650e2349fc13ae2f51fd5484"
+                  },
+                "description": "provide product id (MongoDB ObjectId)"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Cart updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "Cart Updated",
+                    "cart": {
+                      "_id": "6512f5f56c6f89f3bda46004",
+                      "quantity": 5,
+                      "product": {
+                        "_id": "650e2349fc13ae2f51fd5484",
+                        "title": "Laptop Stand",
+                        "description": "High-quality product with durable materials",
+                        "price": 137355.69,
+                        "rating": 1,
+                        "stock": 193095,
+                        "brand": "Xiaomi",
+                        "category": "Tablets",
+                        "deleted": false
+                      },
+                      "user": "650de2baeaf200fecca01093",
+                      "__v": 0
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "<Error message>"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token not provided or token blacklisted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": [
+                    {
+                      "message": "Unauthorized"
+                    },
+                    {
+                      "message": "Unauthorized",
+                      "error": "<Error message>"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete":{
+        "summary": "Delete cart",
+        "tags": [
+          "Cart"
+        ],
+        "security": [
+          {
+            "bearer_token_Auth":[]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "cartId",
+            "in": "path",
+            "description": "The cartId (MongoDB ObjectID)",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cart Deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "Cart Deleted"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "<Error message>"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token not provided or token blacklisted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": [
+                    {
+                      "message": "Unauthorized"
+                    },
+                    {
+                      "message": "Unauthorized",
+                      "error": "<Error message>"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 }
