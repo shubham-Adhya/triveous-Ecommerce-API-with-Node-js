@@ -50,7 +50,7 @@ const getAllProducts = async (req, res) => {
 
         const docs = await query.exec();
         res.set('X-Total-Count', totalDocs);
-        res.status(200).json(docs);
+        return res.status(200).json(docs);
     } catch (error) {
         return res.status(500).json({ message: error.message });
     }

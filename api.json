@@ -894,6 +894,137 @@
             }
           }
         }
+      },
+      "get": {
+        "summary": "Get Products list (Filter, sort, pagination available)",
+        "tags": [
+          "Product"
+        ],
+        "parameters": [
+          {
+            "name": "category",
+            "in": "query",
+            "description": "Categories to filter by (comma-separated), eg. Tablets,Mobiles,Accessories,Laptops",
+            "required": false,
+            "schema":{
+              "type": "string"
+            }
+          },
+          {
+            "name": "brand",
+            "in": "query",
+            "description": "Brands to filter by (comma-separated), eg. Apple, Google, Huawei, Samsung,Xiaomi",
+            "required": false,
+            "schema":{
+              "type": "string"
+            }
+          },
+          {
+            "name": "_sort",
+            "in": "query",
+            "description": "Sort by attribute eg. price",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "_order",
+            "in": "query",
+            "description": "Sort order (asc or desc)",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "_page",
+            "in": "query",
+            "description": "Page number",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "_limit",
+            "in": "query",
+            "description": "Number of items per page",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "admin",
+            "in": "query",
+            "description": "Admin access flag",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Array of products",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": [
+                    {
+                      "_id": "650e234afc13ae2f51fd5569",
+                      "title": "Laptop Stand",
+                      "description": "High-quality product with durable materials",
+                      "price": 183413.8,
+                      "rating": 3,
+                      "stock": 501194,
+                      "brand": "Huawei",
+                      "category": "Accessories",
+                      "deleted": false
+                    },
+                    {
+                      "_id": "650e2349fc13ae2f51fd54fe",
+                      "title": "Wireless Headphones",
+                      "description": "Exceptional craftsmanship and attention to detail",
+                      "price": 181089.12,
+                      "rating": 1,
+                      "stock": 585896,
+                      "brand": "Huawei",
+                      "category": "Tablets",
+                      "deleted": false
+                    },
+                    {
+                      "_id": "650e2349fc13ae2f51fd5505",
+                      "title": "Laptop Stand",
+                      "description": "High-quality product with durable materials",
+                      "price": 163272.26,
+                      "rating": 0,
+                      "stock": 893010,
+                      "brand": "Huawei",
+                      "category": "Accessories",
+                      "deleted": false
+                    }
+                  ]
+                }
+              }
+            }
+          }, 
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "<Error message>"
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/products/{id}": {
