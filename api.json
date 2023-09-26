@@ -906,7 +906,7 @@
             "in": "query",
             "description": "Categories to filter by (comma-separated), eg. Tablets,Mobiles,Accessories,Laptops",
             "required": false,
-            "schema":{
+            "schema": {
               "type": "string"
             }
           },
@@ -915,7 +915,7 @@
             "in": "query",
             "description": "Brands to filter by (comma-separated), eg. Apple, Google, Huawei, Samsung,Xiaomi",
             "required": false,
-            "schema":{
+            "schema": {
               "type": "string"
             }
           },
@@ -971,7 +971,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
+                  "type": "array",
                   "example": [
                     {
                       "_id": "650e234afc13ae2f51fd5569",
@@ -1010,7 +1010,7 @@
                 }
               }
             }
-          }, 
+          },
           "500": {
             "description": "Internal Server Error",
             "content": {
@@ -1044,7 +1044,7 @@
             "in": "path",
             "description": "The product id (MongoDB ObjectID)",
             "required": true,
-            "schema":{
+            "schema": {
               "type": "string"
             }
           }
@@ -1079,7 +1079,7 @@
                   "example": {
                     "message": "New Product Added Successfully",
                     "product": {
-                      "_id":"<MongoDB ObjectID>",
+                      "_id": "<MongoDB ObjectID>",
                       "title": "Luxury iPhone 14 Pro ",
                       "description": "Introducing the all new iPhone 15 pro max, Again, this time we have only changed the number, nothing new here",
                       "price": 50000,
@@ -1172,6 +1172,131 @@
                   "example": {
                     "message": "<Error message>"
                   }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/categories": {
+      "get": {
+        "summary": "get All Categories",
+        "tags": [
+          "Category"
+        ],
+        "responses": {
+          "200": {
+            "description": "Array of categories with label and description",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "categories": [
+                      {
+                        "label": "Mobiles",
+                        "description": "All kind of Mobiles are listed here"
+                      },
+                      {
+                        "label": "Laptops",
+                        "description": "All kind of Laptops are listed here"
+                      },
+                      {
+                        "label": "Tablets",
+                        "description": "All kind of Tablets are listed here"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error getting categories",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "<Error message>"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new Category, provide JWT token of an admin.",
+        "tags": [
+          "Category"
+        ],
+        "security": [
+          {
+            "bearer_token_Auth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "example": {
+                  "label": "Keyboards",
+                  "description": "All kind of keyboards are listed here"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "A new Category is created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "New Category added successfully",
+                    "category": {
+                      "label": "Keyboards",
+                      "description": "All kind of keyboards are listed here"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "If token error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "Unauthorized",
+                    "error": "<Error message>"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Internal server error or  Category Label or Description not provided",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": [
+                    {
+                      "message": "<Error message>"
+                    },
+                    {
+                      "message": "Provide Category Label & Description"
+                    }
+                  ]
                 }
               }
             }
