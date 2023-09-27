@@ -1492,15 +1492,15 @@
         }
       }
     },
-    "/cart/{userId}":{
-      "get":{
+    "/cart/{userId}": {
+      "get": {
         "summary": "Get cart by userId, Only admin can pass userId param, provide Admin JWT token",
         "tags": [
           "Cart"
         ],
         "security": [
           {
-            "bearer_token_Auth":[]
+            "bearer_token_Auth": []
           }
         ],
         "parameters": [
@@ -1596,15 +1596,15 @@
         }
       }
     },
-    "/cart/{cartId}":{
-      "patch":{
+    "/cart/{cartId}": {
+      "patch": {
         "summary": "Update cart",
         "tags": [
           "Cart"
         ],
         "security": [
           {
-            "bearer_token_Auth":[]
+            "bearer_token_Auth": []
           }
         ],
         "parameters": [
@@ -1618,16 +1618,16 @@
             }
           }
         ],
-        "requestBody":{
+        "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
                 "example": {
-                    "quantity": 5,
-                    "product": "650e2349fc13ae2f51fd5484"
-                  },
+                  "quantity": 5,
+                  "product": "650e2349fc13ae2f51fd5484"
+                },
                 "description": "provide product id (MongoDB ObjectId)"
               }
             }
@@ -1698,14 +1698,14 @@
           }
         }
       },
-      "delete":{
+      "delete": {
         "summary": "Delete cart",
         "tags": [
           "Cart"
         ],
         "security": [
           {
-            "bearer_token_Auth":[]
+            "bearer_token_Auth": []
           }
         ],
         "parameters": [
@@ -1759,6 +1759,804 @@
                     {
                       "message": "Unauthorized",
                       "error": "<Error message>"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/orders": {
+      "post": {
+        "summary": "Create new order by user , provide User JWT only",
+        "tags": [
+          "Order"
+        ],
+        "security": [
+          {
+            "bearer_token_Auth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "example": {
+                  "items": [
+                    {
+                      "product": {
+                        "id": "650e2349fc13ae2f51fd54a9"
+                      },
+                      "quantity": 1
+                    },
+                    {
+                      "product": {
+                        "id": "650e2349fc13ae2f51fd54af"
+                      },
+                      "quantity": 1
+                    },
+                    {
+                      "product": {
+                        "id": "650e2349fc13ae2f51fd54b1"
+                      },
+                      "quantity": 1
+                    }
+                  ],
+                  "totalAmount": 100000,
+                  "totalItems": 3,
+                  "user": "650de2baeaf200fecca01093",
+                  "paymentMethod": "cash",
+                  "selectedAddress": "18, RNC Road Subhasgram"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "New Order Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "New Order Created",
+                    "order": {
+                      "items": [
+                        {
+                          "product": {
+                            "id": "650e2349fc13ae2f51fd54a9"
+                          },
+                          "quantity": 2
+                        },
+                        {
+                          "product": {
+                            "id": "650e2349fc13ae2f51fd54af"
+                          },
+                          "quantity": 1
+                        },
+                        {
+                          "product": {
+                            "id": "650e2349fc13ae2f51fd54b1"
+                          },
+                          "quantity": 1
+                        }
+                      ],
+                      "totalAmount": 10000,
+                      "totalItems": 3,
+                      "user": "650de2baeaf200fecca01093",
+                      "paymentMethod": "cash",
+                      "paymentStatus": "pending",
+                      "status": "pending",
+                      "selectedAddress": "18, RNC Road Subhasgram",
+                      "deleted": false,
+                      "_id": "6514232cfea17d7140b702a7",
+                      "__v": 0
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "<Error message>"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token not provided or token blacklisted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": [
+                    {
+                      "message": "Unauthorized"
+                    },
+                    {
+                      "message": "Unauthorized",
+                      "error": "<Error message>"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Get Orders by admin (sort, pagination), provide Admin JWT roken",
+        "tags": [
+          "Order"
+        ],
+        "security": [
+          {
+            "bearer_token_Auth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "_sort",
+            "in": "query",
+            "description": "Sort by attribute eg. price",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "_order",
+            "in": "query",
+            "description": "Sort order (asc or desc)",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "_page",
+            "in": "query",
+            "description": "Page number",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "_limit",
+            "in": "query",
+            "description": "Number of items per page",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get Orders by admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "orders": [
+                      {
+                        "deleted": false,
+                        "_id": "650ec479a5171d136179b40d",
+                        "items": [
+                          {
+                            "product": {
+                              "id": "650e2349fc13ae2f51fd54f9"
+                            },
+                            "quantity": 3
+                          },
+                          {
+                            "product": {
+                              "id": "650e2349fc13ae2f51fd54c4"
+                            },
+                            "quantity": 1
+                          }
+                        ],
+                        "totalAmount": 100,
+                        "totalItems": 4,
+                        "user": "650de2baeaf200fecca01093",
+                        "paymentMethod": "cash",
+                        "paymentStatus": "pending",
+                        "status": "pending",
+                        "selectedAddress": "18, RNC Road Subhasgram",
+                        "__v": 0
+                      },
+                      {
+                        "_id": "6514232cfea17d7140b702a7",
+                        "items": [
+                          {
+                            "product": {
+                              "id": "650e2349fc13ae2f51fd54a9"
+                            },
+                            "quantity": 2
+                          },
+                          {
+                            "product": {
+                              "id": "650e2349fc13ae2f51fd54af"
+                            },
+                            "quantity": 1
+                          },
+                          {
+                            "product": {
+                              "id": "650e2349fc13ae2f51fd54b1"
+                            },
+                            "quantity": 1
+                          }
+                        ],
+                        "totalAmount": 10000,
+                        "totalItems": 3,
+                        "user": "650de2baeaf200fecca01093",
+                        "paymentMethod": "cash",
+                        "paymentStatus": "pending",
+                        "status": "pending",
+                        "selectedAddress": "18, RNC Road Subhasgram",
+                        "deleted": false,
+                        "__v": 0
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "<Error message>"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token not provided or token blacklisted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": [
+                    {
+                      "message": "Unauthorized"
+                    },
+                    {
+                      "message": "Unauthorized",
+                      "error": "<Error message>"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/orders/own": {
+      "get": {
+        "summary": "Get order by User, pass user JWT token",
+        "tags": [
+          "Order"
+        ],
+        "security": [
+          {
+            "bearer_token_Auth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get all Orders by user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "example": [
+                    {
+                      "deleted": false,
+                      "_id": "650ec479a5171d136179b40d",
+                      "items": [
+                        {
+                          "product": {
+                            "id": "650e2349fc13ae2f51fd54f9"
+                          },
+                          "quantity": 3
+                        },
+                        {
+                          "product": {
+                            "id": "650e2349fc13ae2f51fd54c4"
+                          },
+                          "quantity": 1
+                        }
+                      ],
+                      "totalAmount": 100,
+                      "totalItems": 4,
+                      "user": "650de2baeaf200fecca01093",
+                      "paymentMethod": "cash",
+                      "paymentStatus": "pending",
+                      "status": "pending",
+                      "selectedAddress": "18, RNC Road Subhasgram",
+                      "__v": 0
+                    },
+                    {
+                      "_id": "65142293424533249c425db2",
+                      "items": [
+                        {
+                          "product": {
+                            "id": "650e2349fc13ae2f51fd54a9"
+                          },
+                          "quantity": 1
+                        },
+                        {
+                          "product": {
+                            "id": "650e2349fc13ae2f51fd54af"
+                          },
+                          "quantity": 1
+                        },
+                        {
+                          "product": {
+                            "id": "650e2349fc13ae2f51fd54b1"
+                          },
+                          "quantity": 1
+                        }
+                      ],
+                      "totalAmount": 100000,
+                      "totalItems": 3,
+                      "user": "650de2baeaf200fecca01093",
+                      "paymentMethod": "cash",
+                      "paymentStatus": "pending",
+                      "status": "pending",
+                      "selectedAddress": "18, RNC Road Subhasgram",
+                      "deleted": false,
+                      "__v": 0
+                    },
+                    {
+                      "_id": "6514232cfea17d7140b702a7",
+                      "items": [
+                        {
+                          "product": {
+                            "id": "650e2349fc13ae2f51fd54af"
+                          },
+                          "quantity": 1
+                        },
+                        {
+                          "product": {
+                            "id": "650e2349fc13ae2f51fd54b1"
+                          },
+                          "quantity": 1
+                        }
+                      ],
+                      "totalAmount": 10000,
+                      "totalItems": 2,
+                      "user": "650de2baeaf200fecca01093",
+                      "paymentMethod": "cash",
+                      "paymentStatus": "pending",
+                      "status": "pending",
+                      "selectedAddress": "18, RNC Road Subhasgram",
+                      "deleted": false,
+                      "__v": 0
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "<Error message>"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token not provided or token blacklisted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": [
+                    {
+                      "message": "Unauthorized"
+                    },
+                    {
+                      "message": "Unauthorized",
+                      "error": "<Error message>"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/orders/own/{userId}": {
+      "get": {
+        "summary": "Get order by userId (userId optional), Only admin can pass userId param, provide admin JWT",
+        "tags": [
+          "Order"
+        ],
+        "security": [
+          {
+            "bearer_token_Auth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "The userId (MongoDB ObjectID)",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get all Orders by user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "example": [
+                    {
+                      "deleted": false,
+                      "_id": "650ec479a5171d136179b40d",
+                      "items": [
+                        {
+                          "product": {
+                            "id": "650e2349fc13ae2f51fd54f9"
+                          },
+                          "quantity": 3
+                        },
+                        {
+                          "product": {
+                            "id": "650e2349fc13ae2f51fd54c4"
+                          },
+                          "quantity": 1
+                        }
+                      ],
+                      "totalAmount": 100,
+                      "totalItems": 4,
+                      "user": "650de2baeaf200fecca01093",
+                      "paymentMethod": "cash",
+                      "paymentStatus": "pending",
+                      "status": "pending",
+                      "selectedAddress": "18, RNC Road Subhasgram",
+                      "__v": 0
+                    },
+                    {
+                      "_id": "65142293424533249c425db2",
+                      "items": [
+                        {
+                          "product": {
+                            "id": "650e2349fc13ae2f51fd54a9"
+                          },
+                          "quantity": 1
+                        },
+                        {
+                          "product": {
+                            "id": "650e2349fc13ae2f51fd54af"
+                          },
+                          "quantity": 1
+                        },
+                        {
+                          "product": {
+                            "id": "650e2349fc13ae2f51fd54b1"
+                          },
+                          "quantity": 1
+                        }
+                      ],
+                      "totalAmount": 100000,
+                      "totalItems": 3,
+                      "user": "650de2baeaf200fecca01093",
+                      "paymentMethod": "cash",
+                      "paymentStatus": "pending",
+                      "status": "pending",
+                      "selectedAddress": "18, RNC Road Subhasgram",
+                      "deleted": false,
+                      "__v": 0
+                    },
+                    {
+                      "_id": "6514232cfea17d7140b702a7",
+                      "items": [
+                        {
+                          "product": {
+                            "id": "650e2349fc13ae2f51fd54af"
+                          },
+                          "quantity": 1
+                        },
+                        {
+                          "product": {
+                            "id": "650e2349fc13ae2f51fd54b1"
+                          },
+                          "quantity": 1
+                        }
+                      ],
+                      "totalAmount": 10000,
+                      "totalItems": 2,
+                      "user": "650de2baeaf200fecca01093",
+                      "paymentMethod": "cash",
+                      "paymentStatus": "pending",
+                      "status": "pending",
+                      "selectedAddress": "18, RNC Road Subhasgram",
+                      "deleted": false,
+                      "__v": 0
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "<Error message>"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token not provided or token blacklisted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": [
+                    {
+                      "message": "Unauthorized"
+                    },
+                    {
+                      "message": "Unauthorized",
+                      "error": "<Error message>"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/orders/{orderId}": {
+      "patch": {
+        "summary": "Update Order",
+        "tags": [
+          "Order"
+        ],
+        "security": [
+          {
+            "bearer_token_Auth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "description": "The orderId (MongoDB ObjectID)",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "example": {
+                  "selectedAddress": "118/3 MG Road"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Order Updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "Order Updated",
+                    "order": {
+                      "deleted": false,
+                      "_id": "650ec479a5171d136179b40d",
+                      "items": [
+                        {
+                          "product": {
+                            "id": "650e2349fc13ae2f51fd54f9"
+                          },
+                          "quantity": 3
+                        },
+                        {
+                          "product": {
+                            "id": "650e2349fc13ae2f51fd54c4"
+                          },
+                          "quantity": 1
+                        }
+                      ],
+                      "totalAmount": 100,
+                      "totalItems": 4,
+                      "user": "650de2baeaf200fecca01093",
+                      "paymentMethod": "cash",
+                      "paymentStatus": "pending",
+                      "status": "pending",
+                      "selectedAddress": "118/3 MG Road",
+                      "__v": 0
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "<Error message>"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token not provided or token blacklisted or order doesn't exist, only a user can modify his/her order, Admin can modify all orders",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": [
+                    {
+                      "message": "Unauthorized"
+                    },
+                    {
+                      "message": "Unauthorized",
+                      "error": "<Error message>"
+                    },
+                    {
+                      "message": "Order doesn't exist"
+                    },
+                    {
+                      "message": "Unauthorized, Only User who made the order can modify"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Order",
+        "tags": [
+          "Order"
+        ],
+        "security": [
+          {
+            "bearer_token_Auth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "description": "The orderId (MongoDB ObjectID)",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Order Deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "Order Deleted",
+                    "order": {
+                      "deleted": false,
+                      "_id": "650ec479a5171d136179b40d",
+                      "items": [
+                        {
+                          "product": {
+                            "id": "650e2349fc13ae2f51fd54f9"
+                          },
+                          "quantity": 3
+                        },
+                        {
+                          "product": {
+                            "id": "650e2349fc13ae2f51fd54c4"
+                          },
+                          "quantity": 1
+                        }
+                      ],
+                      "totalAmount": 100,
+                      "totalItems": 4,
+                      "user": "650de2baeaf200fecca01093",
+                      "paymentMethod": "cash",
+                      "paymentStatus": "pending",
+                      "status": "pending",
+                      "selectedAddress": "118/3 MG Road",
+                      "__v": 0
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "<Error message>"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token not provided or token blacklisted or order doesn't exist, only a user can modify his/her order, Admin can modify all orders",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": [
+                    {
+                      "message": "Unauthorized"
+                    },
+                    {
+                      "message": "Unauthorized",
+                      "error": "<Error message>"
+                    },
+                    {
+                      "message": "Order doesn't exist"
+                    },
+                    {
+                      "message": "Unauthorized, Only User who made the order can delete"
                     }
                   ]
                 }

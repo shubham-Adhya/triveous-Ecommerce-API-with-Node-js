@@ -21,7 +21,7 @@ const createOrder = async (req, res) => {
 
         const doc = await order.save();
 
-        return res.status(201).json({ message: "New Order Created", doc });
+        return res.status(201).json({ message: "New Order Created", order: doc });
     } catch (error) {
         return res.status(400).json({ message: error.message });
     }
@@ -50,9 +50,12 @@ const getOrdersByUserId = async (req, res) => {
 //@access        User and Admin
 const deleteOrder = async (req, res) => {
     const { id } = req.params;
+    
     if (req.user.role === "User") {
         let ord = await OrderModel.findById(id)
-
+        if (!ord) {
+            return res.status(401).json({ message: "Order doesn't exist" })
+        }
         if (String(ord.user) !== String(req.user._id)) {
             return res.status(401).json({ message: 'Unauthorized, Only User who made the order can delete' });
         }
@@ -71,8 +74,10 @@ const updateOrder = async (req, res) => {
     const { id } = req.params;
     if(req.user.role==="User"){
         let ord = await OrderModel.findById(id)
-
-        if (String(ord.user)!== String(req.user._id)){
+        if(!ord){
+            return res.status(401).json({message: "Order doesn't exist"})
+        }
+        if (String(ord?.user)!== String(req.user._id)){
             return res.status(401).json({ message: 'Unauthorized, Only User who made the order can modify' });
         }
     }
@@ -114,7 +119,7 @@ const getAllOrders = async (req, res) => {
 
         const docs = await query.exec();
         res.set('X-Total-Count', totalDocs);
-        return res.status(200).json(docs);
+        return res.status(200).json({orders: docs});
     } catch (error) {
         return res.status(400).json({ message: error.message });
     }
